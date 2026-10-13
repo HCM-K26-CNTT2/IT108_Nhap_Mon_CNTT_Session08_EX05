@@ -1,0 +1,20 @@
+﻿Bài 5 : Tối ưu quy trình xử lý Log hằng ngày 
+Phần 1:Thiết kế kiến trúc
+* Xác định 4 khối cấu trúc của PowerShell Script:
+1. Header block (Khối thông tin script): Dùng ghi chú (#) để lưu thông tin tên script, tác giả, mục đích và ngày khởi tạo.
+2. Biến cấu hình: Khai báo các đường dẫn tệp nguồn (server.log) và tệp đích báo cáo (report.txt) bằng biến bắt đầu với ký tự $.
+3. Thông báo tiến trình: Dùng lệnh Write-Host để xuất các bước thực thi và trạng thái ra màn hình để đảm bảo không ghi đè vào file kết quả
+4. Logic xử lý: Đọc nội dung file log (Get-Content), đưa qua pipeline để lọc chuỗi lỗi 404 (Select-String), ghi dòng tiêu đề === HE THONG TU DONG LOC LOG === và nối tiếp các dòng lỗi tìm được vào file kết quả bằng toán tử >> hoặc Out-File -Append.
+Phần 2: Sản phẩm
+# Dat ten file nguon va file dich 
+$duong_dan_log = "server.log" 
+$duong_dan_report = "report.txt" 
+# Thong bao tien trinh ra man hinh
+ Write-Host "Dang khoi tao va loc log..." 
+# logic xu ly: 
+#  Ghi tieu de vao file report.txt
+ "=== HE THONG TU DONG LOC LOG ===" > $duong_dan_report
+ # Doc file log -> Loc chuoi 404 -> Ghi noi tiep (>>) vao file report.tx
+Get-Content $duong_dan_log | Select-String "404" >> $duong_dan_report
+ # Thong bao xong 
+Write-Host "Da hoan thanh xuat bao cao!"
